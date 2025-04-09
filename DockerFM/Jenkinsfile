@@ -20,11 +20,11 @@ pipeline {
 
         stage('Build') {
             steps {
-                // dir('dockerFILE') {
+                dir('dockerFM') {
                     script {
                         bat "docker build -t python-img:${env.BUILD_ID} ."
                     }
-                // }
+                }
             }
         }
 
