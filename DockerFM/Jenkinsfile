@@ -12,8 +12,8 @@ pipeline {
                         echo 'Repositorio no encontrado, haciendo git clone...'
                         git branch: 'jenkins', url: 'https://github.com/Andrea-MT/Hostear_VM.git'
                     }
-                    // dir('DockerFM') {
-                    // }
+                    dir('DockerFM') {
+                    }
                 }    
             }
         }
