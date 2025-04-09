@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') {
+            steps {
+                script {
+                    if (fileExists('.git')) {
+                        echo 'Repositorio ya existe, haciendo git pull...'
+                        bat 'git pull origin jenkins'
+                    } else {
+                        echo 'Repositorio no encontrado, haciendo git clone...'
+                        git branch: 'jenkins', url: 'https://github.com/Andrea-MT/Hostear_VM.git'
+                    }
+                    // dir('DockerFM') {
+                    // }
+                }    
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // dir('dockerFILE') {
+                    script {
+                        bat "docker build -t python-img:${env.BUILD_ID} ."
+                    }
+                // }
+            }
+        }
+
+        stage('Run') {
+            steps {
+                script {                   
+                    bat 'docker stop django || true'  
+                    bat 'docker rm django || true'    
+
+                    echo 'Iniciando el contenedor...'
+                    bat "docker run -p 8000:8000 --name django -d python-img:${env.BUILD_ID} python manage.py runserver 0.0.0.0:8000"
+                }
+            }
+        }
+    }
+}
